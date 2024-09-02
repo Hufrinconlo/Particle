@@ -24,7 +24,7 @@ sf::Color getColorFromName(const std::string& colorName) {
 
 sf::Color getRandomColor(){
     static const std::vector<std::string> colorNames = {
-        "red", "blue", "green", "yellow", "white", "black", "magenta", "cyan"
+        "red", "blue", "green", "yellow", "white", "magenta", "cyan"
     };
 
     static std::random_device rd;

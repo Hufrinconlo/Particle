@@ -10,14 +10,15 @@
 void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles);
 
 int main() {
-    int width = 800;
-    int height = 600;
-
-    const int maxBalls = 200;
+    int width = 300;
+    int height = 200;
     int flag = 0;
-    
-    double gravity = 7.8;   // Gravity constant (adjust as needed)
-    double timeStep = 0.1;  // Time step for each update
+
+    double gravity = 9.8;   // Gravity constant (adjust as needed)
+    double timeStep = 0.05;  // Time step for each update
+
+    const int maxBalls = 20;
+    const double radius = 20;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "2D Particle Simulation");
 
@@ -38,10 +39,10 @@ int main() {
         updateLogic(circles, width, height, gravity, timeStep);  // Update the logic
         renderGraphics(window, circles);   // Render the graphics
 
-        if (circles.size() < maxBalls && flag%2 == 0) {
-            int x = 10 + (rand() % (width - 20));
+        if (circles.size() < maxBalls && flag%50 == 0) {
+            int x = radius + (rand() % int(width - 2*radius));
             double dampingFactor = dampingDist(rng);
-            circles.push_back(Circle(x, 0, getRandomColor(), dampingFactor));
+            circles.push_back(Circle(x, 0, radius, getRandomColor(), dampingFactor));
 
         }
         flag++;
