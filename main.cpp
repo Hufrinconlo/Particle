@@ -10,17 +10,26 @@
 void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles);
 
 int main() {
-    int width = 300;
-    int height = 200;
-    int flag = 0;
+    int flag = 0; // sirve para que no agrege bolas en cada iteracion
 
     double gravity = 9.8;   // Gravity constant (adjust as needed)
-    double timeStep = 0.05;  // Time step for each update
+    double timeStep = 0.016;  // Time step for each update
 
-    const int maxBalls = 20;
-    const double radius = 20;
+    const int maxBalls = 500;
+    const double radius = 10;
 
-    sf::RenderWindow window(sf::VideoMode(width, height), "2D Particle Simulation");
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    
+    // Se le resta para que no se salgan de la pantalla
+    desktop.width = desktop.width-100;
+    desktop.height = desktop.height-100;
+
+    int width = desktop.width;
+    int height = desktop.height;
+
+    std::cout<<width<<" "<<height<<std::endl;
+
+    sf::RenderWindow window(desktop, "2D Particle Simulation");
 
     std::vector<Circle> circles;
 
@@ -34,20 +43,36 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            // Handle key press event
+            if (event.type == sf::Event::KeyPressed) {
+                // Close the window if Escape is pressed
+                if (event.key.code == sf::Keyboard::Escape)
+                    window.close();
+                /*
+                if ( event.key.code == sf::Keyboard::Space) {
+                    int newX = radius + (rand() % int(width - 2*radius));
+                    int newY = 0;
+
+                    // Use the function from logic.cpp via logic.hpp
+                    if (!isOverlapping(circles, newX, newY, radius)) {
+                        double dampingFactor = dampingDist(rng);
+                        circles.push_back(Circle(newX, 0, radius, getRandomColor(), dampingFactor));
+                    }
+            }*/
+            }
         }
+        
+        if (circles.size() < maxBalls && flag%20 == 0) {
+            int x = radius + (rand() % int(width - 2*radius));
+            double dampingFactor = dampingDist(rng);
+            circles.push_back(Circle(x, radius, radius, getRandomColor(), dampingFactor));
+        }
+        flag++;
+        
 
         updateLogic(circles, width, height, gravity, timeStep);  // Update the logic
         renderGraphics(window, circles);   // Render the graphics
-
-        if (circles.size() < maxBalls && flag%50 == 0) {
-            int x = radius + (rand() % int(width - 2*radius));
-            double dampingFactor = dampingDist(rng);
-            circles.push_back(Circle(x, 0, radius, getRandomColor(), dampingFactor));
-
-        }
-        flag++;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(5)); // Wait a bit
 
     }
 

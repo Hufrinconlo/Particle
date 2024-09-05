@@ -26,10 +26,10 @@ void updateLogic(std::vector<Circle>& circles, int width, int height, double gra
 
 double calculateDistance(double x1, double y1, double x2, double y2);
 
-void checkCollisions(std::vector<Circle>& circles);
-
 void handleCollision(Circle& circle1, Circle& circle2);
 
 bool isCollision(const Circle& circle1, const Circle& circle2);
+
+bool isOverlapping(const std::vector<Circle>& circles, float newX, float newY, float radius);
 
 #endif // SIMULATION_HPP

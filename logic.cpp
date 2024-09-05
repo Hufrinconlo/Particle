@@ -2,7 +2,7 @@
 #include "simulation.hpp"
 
 void updateLogic(std::vector<Circle>& circles, int width, int height, double gravity, double timeStep){
-    
+    const int val = 10;
     
     for (auto& circle : circles) {
         // Example logic: move down until the bottom or collision
@@ -15,10 +15,18 @@ void updateLogic(std::vector<Circle>& circles, int width, int height, double gra
         circle.x += circle.velX * timeStep;
         circle.y += circle.velY * timeStep;
 
-        if (circle.y > height - circle.radius) {
+        if (circle.y > height - circle.radius- val) {
             
-            circle.y = height - circle.radius;
+            circle.y = height - circle.radius - val;
             circle.velY = -circle.velY * circle.dampingFactor;
+        }
+        if (circle.x > width - circle.radius - val){
+            circle.x = width - circle.radius - val;
+            circle.velX = -circle.velX * circle.dampingFactor;
+        }
+        if (circle.x - circle.radius - val < 0){
+            circle.x = circle.radius + val;
+            circle.velX = -circle.velX * circle.dampingFactor;
         }
     }
 
@@ -62,10 +70,10 @@ void handleCollision(Circle& circle1, Circle& circle2) {
     double dotProduct = dvx * nx + dvy * ny;
 
     // Skip if the circles are moving away from each other
-    //if (dotProduct > 0) return;
+    if (dotProduct < 0) return;
 
     // Calculate the impulse
-    double impulse = 2 * dotProduct / (circle1.radius + circle2.radius);
+    double impulse = 19 * dotProduct / (circle1.radius + circle2.radius);
 
     // Apply impulse to the velocities
     circle1.velX -= impulse * nx;
@@ -74,14 +82,15 @@ void handleCollision(Circle& circle1, Circle& circle2) {
     circle2.velY += impulse * ny;
 }
 
+bool isOverlapping(const std::vector<Circle>& circles, float newX, float newY, float radius) {
+    for (const auto& circle : circles) {
+        float existingX = circle.x + circle.radius;
+        float existingY = circle.y + circle.radius;
+        float existingRadius = circle.radius;
 
-void checkCollisions(std::vector<Circle>& circles) {
-    for (size_t i = 0; i < circles.size(); ++i) {
-        for (size_t j = i + 1; j < circles.size(); ++j) {
-            double distance = calculateDistance(circles[i].x, circles[i].y, circles[j].x, circles[j].y);
-            if (distance < circles[i].radius + circles[j].radius) {
-                handleCollision(circles[i], circles[j]);
-            }
+        if (calculateDistance(newX, newY, existingX, existingY) < (radius + existingRadius)) {
+            return true;
         }
     }
+    return false;
 }

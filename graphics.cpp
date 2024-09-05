@@ -13,6 +13,20 @@ void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles
         shape.setPosition(circle.x, circle.y); // Scale positions by 20 for better visibility
         window.draw(shape);
     }
+    
+    sf::Vector2u windowSize = window.getSize();
+
+    // Extract the width and height
+    unsigned int width = windowSize.x-20;
+    unsigned int height = windowSize.y-20;
+    
+    
+    sf::RectangleShape wall (sf::Vector2f(width,height));
+    wall.setPosition(10,10);
+    wall.setFillColor(sf::Color::Transparent);
+    wall.setOutlineColor(sf::Color::White);
+    wall.setOutlineThickness(10);
+    window.draw(wall);
 
     window.display();
 }
