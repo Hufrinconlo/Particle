@@ -1,15 +1,32 @@
 // logic.cpp
 #include "simulation.hpp"
+#include "Variables.hpp"
 
-void updateLogic(std::vector<Circle>& circles, int width, int height, double gravity, double timeStep){
-    const int val = 10;
-    
+void updateLogicSubStep(std::vector<Circle>& circles, int width, int height){
+    double timeStep = double(conf::timeStep/conf::subSteps);
+
+    for (int i = 0; i < conf::subSteps; i++){
+        updateLogic(circles, width, height, timeStep);
+    }
+}
+
+void updateLogic(std::vector<Circle>& circles, int width, int height, double timeStep){
+    const int val = 10; // esta variable está para poner un bordillo
+    // Check and handle collisions between circles
+    for (size_t i = 0; i < circles.size(); ++i) {
+        for (size_t j = i + 1; j < circles.size(); ++j) {
+            if (isCollision(circles[i], circles[j])) {
+                handleCollision(circles[i], circles[j], width, height);
+            }
+        }
+    }
     for (auto& circle : circles) {
+
         // Example logic: move down until the bottom or collision
 
         // x(t) = x + v*t + a * t
 
-        circle.velY += gravity * timeStep;
+        circle.velY += conf::gravity * timeStep;
 
         // Update position with velocity
         circle.x += circle.velX * timeStep;
@@ -29,15 +46,6 @@ void updateLogic(std::vector<Circle>& circles, int width, int height, double gra
             circle.velX = -circle.velX * circle.dampingFactor;
         }
     }
-
-    // Check and handle collisions between circles
-    for (size_t i = 0; i < circles.size(); ++i) {
-        for (size_t j = i + 1; j < circles.size(); ++j) {
-            if (isCollision(circles[i], circles[j])) {
-                handleCollision(circles[i], circles[j]);
-            }
-        }
-    }
 }
 
 bool isCollision(const Circle& circle1, const Circle& circle2) {
@@ -49,7 +57,7 @@ double calculateDistance(double x1, double y1, double x2, double y2) {
     return std::sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
-void handleCollision(Circle& circle1, Circle& circle2) {
+void handleCollision(Circle& circle1, Circle& circle2, int width, int height) {
     // Normal vector
     double nx = circle2.x - circle1.x;
     double ny = circle2.y - circle1.y;
@@ -61,6 +69,26 @@ void handleCollision(Circle& circle1, Circle& circle2) {
     // Normalize the normal vector
     nx /= distance;
     ny /= distance;
+
+    double overlap = (-circle1.radius - circle2.radius) + distance;
+    double separation = overlap / 2.0;
+
+    if (circle1.y == height - circle1.radius || circle2.y == height - circle2.radius) {
+    // Adjust based on which circle is constrained
+        if (circle1.y == height - circle1.radius) {
+            circle2.x -= nx * overlap;
+            circle2.y -= ny * overlap;
+        } else {
+            circle1.x += nx * overlap;
+            circle1.y += ny * overlap;
+        }
+    } else {
+        // Equal separation for unconstrained circles
+        circle1.x += nx * separation;
+        circle1.y += ny * separation;
+        circle2.x -= nx * separation;
+        circle2.y -= ny * separation;
+    }
 
     // Calculate relative velocity
     double dvx = circle1.velX - circle2.velX;

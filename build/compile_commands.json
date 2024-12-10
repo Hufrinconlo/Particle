@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/home/hugo/Documents/Particle/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/simulation.dir/main.cpp.o -c /home/hugo/Documents/Particle/main.cpp",
+  "file": "/home/hugo/Documents/Particle/main.cpp",
+  "output": "CMakeFiles/simulation.dir/main.cpp.o"
+},
+{
+  "directory": "/home/hugo/Documents/Particle/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/simulation.dir/logic.cpp.o -c /home/hugo/Documents/Particle/logic.cpp",
+  "file": "/home/hugo/Documents/Particle/logic.cpp",
+  "output": "CMakeFiles/simulation.dir/logic.cpp.o"
+},
+{
+  "directory": "/home/hugo/Documents/Particle/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/simulation.dir/graphics.cpp.o -c /home/hugo/Documents/Particle/graphics.cpp",
+  "file": "/home/hugo/Documents/Particle/graphics.cpp",
+  "output": "CMakeFiles/simulation.dir/graphics.cpp.o"
+},
+{
+  "directory": "/home/hugo/Documents/Particle/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/simulation.dir/color_utils.cpp.o -c /home/hugo/Documents/Particle/color_utils.cpp",
+  "file": "/home/hugo/Documents/Particle/color_utils.cpp",
+  "output": "CMakeFiles/simulation.dir/color_utils.cpp.o"
+}
+]

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "simulation.hpp"
 #include "color_utils.hpp"
+#include "Variables.hpp"
 
 #include <thread> // For sleep
 #include <chrono> // For time
@@ -11,12 +12,6 @@ void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles
 
 int main() {
     int flag = 0; // sirve para que no agrege bolas en cada iteracion
-
-    double gravity = 9.8;   // Gravity constant (adjust as needed)
-    double timeStep = 0.016;  // Time step for each update
-
-    const int maxBalls = 500;
-    const double radius = 10;
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     
@@ -63,15 +58,15 @@ int main() {
             }
         }
         
-        if (circles.size() < maxBalls && flag%20 == 0) {
-            int x = radius + (rand() % int(width - 2*radius));
+        if (circles.size() < conf::maxBalls && flag%20 == 0) {
+            int x = conf::radius + (rand() % int(width - 2*conf::radius));
             double dampingFactor = dampingDist(rng);
-            circles.push_back(Circle(x, radius, radius, getRandomColor(), dampingFactor));
+            circles.push_back(Circle(x, conf::radius, conf::radius, getRandomColor(), dampingFactor));
         }
         flag++;
         
 
-        updateLogic(circles, width, height, gravity, timeStep);  // Update the logic
+        updateLogicSubStep(circles, width, height);  // Update the logic
         renderGraphics(window, circles);   // Render the graphics
 
     }

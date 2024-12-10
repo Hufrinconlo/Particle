@@ -22,11 +22,13 @@ struct Circle {
 };
 
 // Function prototypes
-void updateLogic(std::vector<Circle>& circles, int width, int height, double gravity, double timeStep);
+void updateLogicSubStep(std::vector<Circle>& circles, int width, int height);
+
+void updateLogic(std::vector<Circle>& circles, int width, int height, double timeStep);
 
 double calculateDistance(double x1, double y1, double x2, double y2);
 
-void handleCollision(Circle& circle1, Circle& circle2);
+void handleCollision(Circle& circle1, Circle& circle2, int width, int height);
 
 bool isCollision(const Circle& circle1, const Circle& circle2);
 
