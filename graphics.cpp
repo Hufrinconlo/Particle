@@ -5,6 +5,7 @@
 #include "Variables.hpp"
 
 void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles) {
+    std::cout<<"Entra a renderGraphics"<<std::endl;
     window.clear(sf::Color::Black);
 
     for (const auto& circle : circles) {

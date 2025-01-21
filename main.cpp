@@ -12,6 +12,7 @@ void renderGraphics(sf::RenderWindow& window, const std::vector<Circle>& circles
 
 int main() {
     int flag = 0; // sirve para que no agrege bolas en cada iteracion
+    int id_counter = 0; // Para asignar ids a los circulos
 
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     
@@ -28,11 +29,12 @@ int main() {
 
     std::vector<Circle> circles;
 
+    CollisionGrid grid(width, height, conf::cellSize); // Grid with a specified cell size
+
     static std::random_device rd;
     static std::mt19937 rng(rd());
     std::uniform_real_distribution<double> dampingDist(0.4, 0.6);  // Damping factor range
     
-
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -54,19 +56,19 @@ int main() {
                         double dampingFactor = dampingDist(rng);
                         circles.push_back(Circle(newX, 0, radius, getRandomColor(), dampingFactor));
                     }
-            }*/
+                }*/
             }
         }
-        
+
         if (circles.size() < conf::maxBalls && flag%20 == 0) {
             int x = conf::radius + (rand() % int(width - 2*conf::radius));
             double dampingFactor = dampingDist(rng);
-            circles.push_back(Circle(x, conf::radius, conf::radius, getRandomColor(), dampingFactor));
+            circles.emplace_back(x, conf::radius, conf::radius, getRandomColor(), dampingFactor, id_counter);
+            id_counter++;
         }
         flag++;
-        
-
-        updateLogicSubStep(circles, width, height);  // Update the logic
+        std::cout<<"Inserta una bola"<<std::endl;
+        updateLogicSubStep(circles, width, height, grid);  // Update the logic
         renderGraphics(window, circles);   // Render the graphics
 
     }
